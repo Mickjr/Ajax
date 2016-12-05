@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+    <head>
+
+        <title>TODO supply a title</title>
+
+        <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+        <!-- script src="test.js"></script> -->
+
+    </head>
+
+    <body>
+
+        <div id="test1" class="testclass1">
+
+        	<button id="btn2">Get Results</button>
+
+            <h1></h1>
+        	
+        </div>
+        <div id="data-payload">
+
+        </div>
+    </body>
+
+    <script>
+
+    function click_handler(e){
+
+        // console.log('click handler called',e);
+
+        return retrieve_data();
+    }
+
+    function populate_data(data){
+
+        // console.log({data: data});
+
+        var container = $('#data-payload');
+
+        $.each(data,function(i, item){
+            
+            var row = $( '<div><br><span>'+item.id+'</span><br><span>'+item.status+'</span><br><span>'+item.weather+'</span><br><span>'+item.home.name+'</span><br><span>'+item.away.name+'</span><br><span>'+item.broadcast.network+'</span><br><span>'+item.attendance+'</span><br><span>'+item.weather+'</span><br><span>'+item.weather+'</span><br></div>' );
+
+            container.append(row);
+
+        });
+    }
+
+    function retrieve_data(){
+
+        $.ajax({
+
+           type: "POST",                    
+           url: 'weeklyschedule.php',
+           dataType: 'json',
+           //data:{method:method,data:formData},
+           success: populate_data
+
+        });
+
+    }
+
+    $( document ).ready(function() {
+
+        console.log('js running');
+
+        var volunteers = {};
+
+        // $("div#test1.testclass1").html('<span>Hello World</span>');
+        $("body div#test1.testclass1").on ("click", "button#btn2", click_handler );
+
+
+      });
+
+     </script>
+
+    </html>

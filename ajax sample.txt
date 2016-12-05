@@ -1,0 +1,117 @@
+AJAX FORM SUBMISSION
+
+		<script>
+
+		$('#new-request').click(function(e) {
+
+			$("form#pray-request")[0].reset();
+
+			$('#form-content').lightbox_me({
+				centered: true,
+				showOverlay: true,
+				closeClick: false,
+				onLoad: function() {
+
+					$('#form-content').find('input:first').focus();
+				}
+			});
+			e.preventDefault();
+		});
+
+		</script>
+
+
+		<?php /* For handling prayer requests */ ?>
+		<script>
+
+			$(document).on('click', '#cancel-request', function(e) {
+				$("form#pray-request")[0].reset();
+				$('#form-content').trigger('close');
+			});
+
+
+			$(document).on('click', '#save-request', function(e) {
+
+				e.preventDefault();
+
+				alertify.confirm("<?php _e('Submit your Prayer Request?','jpbs31'); ?>", function(e) {
+					if (e) {
+
+						$.ajax({
+
+							type: "POST",
+							url: "<?php bloginfo('template_url'); ?>/PRAYER/inc/newrequest.php",
+							data: $('form#pray-request').serialize(),
+							success: function(data) {
+
+								if (data.messsage) {
+
+									$("form#pray-request")[0].reset();
+									alert(data.msg);
+
+									if ( $('#prayer-container').length ) {
+
+										// Prayer Wall is open do a refresh
+										// Will reset to the first page in pager
+										do_page();
+
+									}
+
+
+								} else {
+
+									alert("<?php _e('Request was not completed','jpbs31'); ?>");
+
+								}
+
+							}
+
+						});
+
+						$('#form-content').trigger('close');
+
+					}
+				});
+
+			});
+
+		</script>
+
+
+PHP WITH RETURNING VALUES
+<?php
+
+define( 'PTPATH', $_SERVER['DOCUMENT_ROOT'] . '/' );
+include( PTPATH . 'wp-load.php' );
+
+$current_user = wp_get_current_user();
+$userID    = $current_user->ID;
+
+$response_array = array();
+
+if ( isset($_POST['com_encourage']) ) {
+	$encourage = stripslashes_deep( $_POST['com_encourage'] );
+	$request_id = $_POST['req'];
+
+	$oneRow = array(
+		"request_id"	=> $request_id,
+		"encourage"		=> stripslashes_deep( $encourage ),
+		"posted_by"		=> $userID,
+		"approved"		=> 1 // Automatic approval
+	);
+	
+	if ( $wpdb->insert('jp_prayer_comments', $oneRow) ) {
+		// Record was inserted successfully
+		$response_array['status'] = 'success';
+		$response_array['msg'] = __('Your Prayer Encouragement Was Submitted successfully', 'jpbs31');
+		$response_array['eid'] = $request_id;
+
+	} else {
+		$response_array['status'] = 'error';
+		$response_array['msg'] = __('Error submitting your Comments', 'jpbs31');
+	}
+	
+}
+	
+header('Content-Type: application/json');
+echo json_encode($response_array);
