@@ -12,7 +12,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
 
     die("Connection failed: " . $conn->connect_error);
-    
+
 	}
 
 	return $conn;
@@ -38,7 +38,7 @@ $result = $c->query($sql);
 
     $r['id'] = $row['id'];
 
-    $r['email'] = $row['email']; 
+    $r['email'] = $row['email'];
 
     $r['firstname'] = $row['firstname'];
 

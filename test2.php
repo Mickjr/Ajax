@@ -14,7 +14,7 @@ function dbconnect(){
 
         die("Connection failed: " . $conn->connect_error);
     }
-    
+
     return $conn;
 }
 
@@ -36,7 +36,7 @@ while ($row = $result->fetch_assoc()) {
 
     $r['id'] = $row['id'];
 
-    $r['email'] = $row['email']; 
+    $r['email'] = $row['email'];
 
     $r['firstname'] = $row['firstname'];
 
@@ -64,6 +64,3 @@ exit(json_encode($result_array));
 
 
 ?>
-
-	
-	
